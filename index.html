@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Kendoa — Everything You Need. One Place.</title>
+<meta name="description" content="Shop everything, or start selling, on Kendoa.">
+<meta name="theme-color" content="#1A1A1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kendoa">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --o1:#FF6A00; --o2:#FF8A00; --dark:#1A1A1A; --light:#F5F5F5;
+    --grey:#8A8A8A; --line:#EDEDED; --text:#1A1A1A; --red:#E5372B;
+    --sat: env(safe-area-inset-top); --sab: env(safe-area-inset-bottom);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overscroll-behavior-y:none}
+  body{
+    font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:var(--dark); color:var(--text);
+    display:flex; flex-direction:column;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+  button:focus-visible, input:focus-visible, textarea:focus-visible{outline:2px solid var(--o1);outline-offset:1px}
+  input,textarea{font-family:inherit}
+  img{display:block}
+
+  #app{flex:1;display:flex;flex-direction:column;height:100dvh;background:#fff;position:relative;overflow:hidden}
+  #screen{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  #screen.no-scroll{overflow:hidden}
+
+  .status{display:flex;justify-content:space-between;align-items:center;padding:calc(var(--sat) + 6px) 22px 6px;font-size:12px;font-weight:700;flex:none}
+  .status.dark{background:var(--dark);color:#fff}
+  .status.lightbg{background:#fff;color:var(--text)}
+
+  /* ---------- Home ---------- */
+  .home-top{background:var(--dark);color:#fff}
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 18px 12px}
+  .brand{display:flex;align-items:center;gap:7px;font-weight:800;font-size:19px;letter-spacing:.5px}
+  .brand img{height:26px;width:auto}
+  .bell{position:relative;width:34px;height:34px;display:grid;place-items:center}
+  .bell i{position:absolute;top:5px;right:6px;width:8px;height:8px;border-radius:50%;background:#ff3b30;border:1.5px solid var(--dark)}
+  .search{margin:0 16px 14px;background:#fff;border-radius:12px;height:44px;display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--grey)}
+  .search input{flex:1;border:none;outline:none;font:500 13px 'Montserrat',sans-serif;color:var(--text);background:none;min-width:0}
+  .search input::placeholder{color:#9a9a9a}
+  .banner{margin:0 14px;border-radius:16px 16px 0 0;padding:20px 18px 40px;position:relative;overflow:hidden;background:linear-gradient(120deg,var(--o1) 0%,var(--o2) 100%);min-height:140px}
+  .banner h2{font-size:19px;line-height:1.25;font-weight:800;width:62%}
+  .banner p{font-size:9.5px;font-weight:500;margin:7px 0 12px;opacity:.95}
+  .banner .shop{background:#fff;color:var(--o1);font-weight:700;font-size:10.5px;padding:8px 15px;border-radius:20px;display:inline-flex;gap:6px;align-items:center}
+  .banner svg.art{position:absolute;right:-8px;bottom:-6px;width:54%;height:120%}
+  .sheet{background:#fff;border-radius:22px 22px 0 0;margin-top:-20px;position:relative;padding:16px 14px 24px}
+  .cats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px}
+  .cat{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:9px;font-weight:500;text-align:center;color:#333}
+  .cat .ic{width:54px;height:54px;border-radius:14px;background:var(--light);display:grid;place-items:center;font-size:26px}
+  .sec{display:flex;justify-content:space-between;align-items:center;margin:18px 0 12px}
+  .sec h3{font-size:14.5px;font-weight:800}
+  .sec button{font-size:10px;color:var(--grey);font-weight:500}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px}
+  .deal{background:#fff;border-radius:12px;text-align:left}
+  .deal .img{background:var(--light);border-radius:12px;aspect-ratio:1/0.95;display:grid;place-items:center;position:relative;overflow:hidden}
+  .deal .img svg{width:70%;height:78%}
+  .deal .img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .badge{position:absolute;top:6px;left:6px;background:var(--o1);color:#fff;font-size:8px;font-weight:700;padding:3px 6px;border-radius:8px;z-index:2}
+  .newbadge{position:absolute;top:6px;left:6px;background:var(--dark);color:#fff;font-size:8px;font-weight:700;padding:3px 6px;border-radius:8px;z-index:2}
+  .deal .p{font-size:11.5px;font-weight:800;margin-top:7px}
+  .deal .p s{font-size:8px;color:#b5b5b5;font-weight:500;margin-left:3px}
+  .deal .n{font-size:9.5px;color:var(--grey);margin-top:2px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ---------- Bottom nav ---------- */
+  .nav{flex:none;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(10px + var(--sab));background:#fff;border-top:1px solid var(--line)}
+  .nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:500;color:#9a9a9a;position:relative}
+  .nav button.on{color:var(--o1);font-weight:700}
+  .nav svg{width:22px;height:22px}
+  .nav .cnt{position:absolute;top:-4px;left:calc(50% + 5px);background:var(--o1);color:#fff;font-size:8px;font-weight:700;min-width:15px;height:15px;border-radius:8px;display:grid;place-items:center;padding:0 4px}
+
+  /* ---------- Generic page ---------- */
+  .page-title{display:flex;align-items:center;justify-content:space-between;padding:calc(var(--sat) + 10px) 10px 12px;font-weight:700;font-size:14px;background:#fff;position:sticky;top:0;z-index:5}
+  .page-title span{flex:1;text-align:center}
+  .page-title .side{width:36px;display:flex;align-items:center}
+  .page-title .side.r{justify-content:flex-end}
+  .iconbtn{width:36px;height:36px;display:grid;place-items:center}
+  .row{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);width:100%;text-align:left}
+  .row .thumb{width:46px;height:46px;border-radius:12px;background:var(--light);display:grid;place-items:center;font-size:26px;flex:none;overflow:hidden;position:relative}
+  .row .thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .row .t{flex:1;min-width:0}
+  .row .t b{display:block;font-size:12.5px;font-weight:600}
+  .row .t small{font-size:9.5px;color:var(--grey);font-weight:500}
+
+  /* ---------- Product ---------- */
+  .pimg{background:#EFEFEF;height:300px;position:relative;overflow:hidden}
+  .pimg .scroller{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .pimg .scroller::-webkit-scrollbar{display:none}
+  .pimg .slide{min-width:100%;height:100%;scroll-snap-align:start;display:grid;place-items:center;position:relative}
+  .pimg .slide img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .pimg .slide .art{width:78%;height:78%}
+  .pimg .top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:calc(var(--sat) + 8px) 16px 8px;z-index:3;pointer-events:none}
+  .pimg .top>*{pointer-events:auto}
+  .pimg .top .r{display:flex;gap:12px}
+  .round{width:36px;height:36px;border-radius:18px;background:rgba(255,255,255,.85);display:grid;place-items:center}
+  .pimg .count{position:absolute;right:12px;bottom:12px;background:rgba(40,40,40,.7);color:#fff;font-size:9px;padding:3px 8px;border-radius:9px;font-weight:600;z-index:3}
+  .pinfo{background:#fff;border-radius:20px 20px 0 0;margin-top:-16px;position:relative;padding:18px 16px 20px}
+  .pinfo h1{font-size:16px;font-weight:700}
+  .stars{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--grey);margin-top:8px;font-weight:500}
+  .stars b{color:var(--text);font-weight:700}
+  .stars .s{color:var(--o1);letter-spacing:1px;font-size:11px}
+  .newpill{display:inline-block;background:#FFF1E6;color:var(--o1);font-size:9.5px;font-weight:700;padding:4px 8px;border-radius:8px;margin-top:8px}
+  .price{display:flex;align-items:center;gap:9px;margin-top:12px;flex-wrap:wrap}
+  .price b{font-size:20px;font-weight:800}
+  .price s{font-size:11.5px;color:#b5b5b5;font-weight:500}
+  .price .off{background:var(--o1);color:#fff;font-size:9.5px;font-weight:700;padding:3px 7px;border-radius:7px}
+  .lbl{font-size:11px;font-weight:600;margin:18px 0 9px}
+  .lbl span{font-weight:500;color:#444}
+  .swatches{display:flex;gap:10px;flex-wrap:wrap}
+  .sw{width:46px;height:42px;border-radius:10px;background:var(--light);display:grid;place-items:center;border:1.5px solid transparent;overflow:hidden}
+  .sw.on{border-color:var(--o1);background:#FFF1E6}
+  .sw svg{width:32px}
+  .sizes{display:flex;gap:8px;flex-wrap:wrap}
+  .sz{min-width:39px;height:37px;padding:0 8px;border-radius:9px;border:1px solid #E4E4E4;font-size:10.5px;font-weight:600;display:grid;place-items:center;background:#fff}
+  .sz.on{border-color:var(--o1);background:#FFF1E6;color:var(--o1);border-width:1.5px}
+  .desc{font-size:12.5px;line-height:1.65;color:#444;font-weight:500}
+  .meta{font-size:10.5px;color:var(--grey);margin-top:18px;font-weight:500}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 16px calc(12px + var(--sab));background:#fff;border-top:1px solid var(--line);flex:none}
+  .btn{height:46px;border-radius:11px;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+  .btn.out{border:1.5px solid #cfcfcf;background:#fff}
+  .btn.fill{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff}
+  .btn.full{width:100%}
+  .btn:disabled{opacity:.5}
+
+  /* ---------- Cart / Orders / Profile / Shop ---------- */
+  .empty{text-align:center;padding:70px 30px;color:var(--grey);font-size:12.5px;font-weight:500;line-height:1.65}
+  .empty .big{font-size:46px;margin-bottom:12px}
+  .empty .btn{margin:18px auto 0;width:200px}
+  .cartrow{display:flex;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);align-items:center}
+  .cartrow .thumb{width:62px;height:62px;border-radius:12px;background:var(--light);display:grid;place-items:center;position:relative;overflow:hidden;flex:none}
+  .cartrow .thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .cartrow .thumb svg{width:70%;height:70%}
+  .cartrow .t{flex:1;min-width:0}
+  .cartrow .t b{font-size:12.5px;display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cartrow .t small{font-size:9.5px;color:var(--grey);font-weight:500}
+  .cartrow .t .pr{font-size:12.5px;font-weight:800;margin-top:5px;display:block}
+  .qty{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;flex:none}
+  .qty button{width:26px;height:26px;border-radius:8px;background:var(--light);font-weight:700}
+  .total{padding:15px 16px;display:flex;justify-content:space-between;font-weight:800;font-size:14.5px}
+  .foot{padding:16px 16px calc(16px + var(--sab));border-top:1px solid var(--line)}
+  .profile-head{display:flex;align-items:center;gap:14px;padding:14px 18px 20px}
+  .avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(120deg,var(--o1),var(--o2));display:grid;place-items:center;color:#fff;font-weight:800;font-size:23px}
+  .sellcard{display:flex;align-items:center;gap:12px;margin:6px 16px 8px;padding:14px;border-radius:14px;background:#FFF1E6;border:1px solid #FFD9BD}
+  .sellcard .ic{width:44px;height:44px;border-radius:12px;background:var(--o1);display:grid;place-items:center;flex:none}
+  .sellcard .t b{font-size:13px;display:block}
+  .sellcard .t small{font-size:10px;color:#7A5A44;font-weight:500}
+
+  .toast{position:fixed;left:50%;bottom:calc(90px + var(--sab));transform:translate(-50%,20px);background:var(--dark);color:#fff;font-size:11.5px;font-weight:600;padding:11px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- Add product form ---------- */
+  .form{padding:16px 16px 28px}
+  .flabel{font-size:11.5px;font-weight:600;margin-top:18px;margin-bottom:8px;display:block}
+  .fhint{font-size:10px;color:var(--grey);font-weight:500}
+  .finput,.ftextarea{width:100%;height:46px;border-radius:11px;border:1px solid #E4E4E4;background:#FAFAFA;padding:0 13px;font-size:13px;color:var(--text)}
+  .finput:focus,.ftextarea:focus{border-color:var(--o1);background:#fff}
+  .finput.err,.ftextarea.err{border-color:var(--red)}
+  .ftextarea{height:110px;padding:12px 13px;resize:none}
+  .ferr{font-size:10px;color:var(--red);font-weight:500;margin-top:6px}
+  .photos{display:flex;gap:10px;overflow-x:auto;padding-bottom:2px}
+  .addphoto{width:88px;height:88px;border-radius:12px;border:1.5px dashed var(--o1);background:#FFF1E6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none}
+  .addphoto span{font-size:9.5px;font-weight:600;color:var(--o1)}
+  .photo{width:88px;height:88px;border-radius:12px;overflow:hidden;background:var(--light);position:relative;flex:none}
+  .photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .photo .cover{position:absolute;left:5px;bottom:5px;background:rgba(26,26,26,.75);border-radius:6px;padding:2px 6px;font-size:8.5px;color:#fff;font-weight:700}
+  .photo .x{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:10px;background:rgba(26,26,26,.75);display:grid;place-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:9px 13px;border-radius:20px;border:1px solid #E4E4E4;background:#fff;font-size:10.5px;font-weight:600}
+  .chip.on{border-color:var(--o1);background:#FFF1E6;color:var(--o1)}
+  .row2{display:flex;gap:12px}
+  .row2>div{flex:1;min-width:0}
+
+  dialog{border:none;border-radius:16px;padding:0;width:min(320px,86vw);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+  .modal{padding:22px}
+  .modal h3{font-size:15px;font-weight:700;margin-bottom:8px}
+  .modal p{font-size:12px;color:var(--grey);line-height:1.6;margin-bottom:18px;font-weight:500}
+  .modal .row2{gap:10px}
+
+  .installbar{position:absolute;left:10px;right:10px;bottom:calc(78px + var(--sab));background:var(--dark);color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  .installbar img{width:34px;height:34px}
+  .installbar .t{flex:1}
+  .installbar b{font-size:11.5px;display:block}
+  .installbar small{font-size:9.5px;color:#c9c9c9;display:block;margin-top:1px}
+  .installbar button.go{background:var(--o1);color:#fff;font-size:10.5px;font-weight:700;padding:8px 12px;border-radius:9px}
+  .installbar button.x{width:26px;height:26px;display:grid;place-items:center;color:#aaa}
+
+  @media (min-width:480px){
+    body{align-items:center;justify-content:center;background:#0d0d0d}
+    #app{width:420px;height:min(900px,100dvh);border-radius:36px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="screen"><div id="statusbar"></div><div id="content"></div></div>
+  <div id="bottom"></div>
+  <div id="installbar"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<dialog id="dialog"><div class="modal" id="dialogBody"></div></dialog>
+<input type="file" id="fileInput" accept="image/*" multiple capture="environment" style="display:none">
+
+<script>
+/* ================= Icons ================= */
+const I = {
+  bell:`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg>`,
+  search:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  searchO:`<svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  home:(f)=>`<svg viewBox="0 0 24 24" ${f?'fill="currentColor"':'fill="none" stroke="currentColor" stroke-width="2"'}><path d="M12 3 2.5 11.5h2.5V20h5v-5.5h4V20h5v-8.5h2.5z"/></svg>`,
+  grid:(f)=>`<svg viewBox="0 0 24 24" ${f?'fill="currentColor"':'fill="none" stroke="currentColor" stroke-width="2"'}><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>`,
+  cart:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.5l2 11h10l2-8H7"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>`,
+  orders:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>`,
+  user:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c1-4 4-5.5 7.5-5.5s6.5 1.5 7.5 5.5"/></svg>`,
+  back:`<svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>`,
+  heart:`<svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.5 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg>`,
+  heartF:`<svg viewBox="0 0 24 24" fill="#FF6A00" stroke="#FF6A00" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.5 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg>`,
+  share:`<svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M5 12v7h14v-7"/></svg>`,
+  chev:`<svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>`,
+  arrow:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+  trash:`<svg viewBox="0 0 24 24" fill="none" stroke="#E5372B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>`,
+  camera:`<svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h7l1 1.5H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg>`,
+  close:`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+  store:`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6l2-3h12l2 3v3M4 9a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0M5 9v10h14V9"/></svg>`,
+};
+const svg = (path, extra='') => `<svg viewBox="0 0 24 24" ${extra}>${path}</svg>`;
+
+/* ================= Product art (drawn placeholders) ================= */
+const SNEAKER_COLORS = {
+  white:{body:'#FFFFFF',sole:'#FFFFFF',edge:'#C9C9C9',lace:'#BDBDBD',accent:'#2B2B2B'},
+  black:{body:'#222222',sole:'#F2F2F2',edge:'#111111',lace:'#666666',accent:'#444444'},
+  navy:{body:'#1F3A6B',sole:'#F2F2F2',edge:'#16294D',lace:'#7F93B8',accent:'#2C4E8F'},
+};
+const ART = {
+  headphones:`<svg viewBox="0 0 120 120" class="art"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset="1" stop-color="#111"/></linearGradient></defs>
+    <path d="M22 70V58a38 38 0 0 1 76 0v12" fill="none" stroke="#222" stroke-width="7" stroke-linecap="round"/>
+    <path d="M28 66V58a32 32 0 0 1 64 0v8" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+    <rect x="12" y="62" width="26" height="42" rx="13" fill="url(#hg)"/><rect x="82" y="62" width="26" height="42" rx="13" fill="url(#hg)"/>
+    <rect x="18" y="72" width="8" height="22" rx="4" fill="#333"/><rect x="94" y="72" width="8" height="22" rx="4" fill="#333"/></svg>`,
+  watch:`<svg viewBox="0 0 120 120" class="art"><rect x="42" y="4" width="36" height="112" rx="14" fill="#2a2a2a"/>
+    <rect x="30" y="30" width="60" height="60" rx="17" fill="#111" stroke="#555" stroke-width="3"/>
+    <rect x="35" y="35" width="50" height="50" rx="13" fill="#0a1d33"/>
+    <circle cx="60" cy="60" r="16" fill="none" stroke="#4dd0ff" stroke-width="3" opacity=".9"/>
+    <path d="M60 50v11l7 4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <rect x="88" y="52" width="4" height="12" rx="2" fill="#666"/></svg>`,
+};
+function sneakerArt(color){
+  const p = SNEAKER_COLORS[color] || SNEAKER_COLORS.white;
+  return `<svg viewBox="0 0 160 100" class="art"><ellipse cx="80" cy="90" rx="66" ry="6" fill="#000" opacity=".12"/>
+    <path d="M10 70c0-6 3-8 8-9l30-8c6-2 10-7 13-14l6-12c2-3 5-3 8-1 8 6 16 10 27 14 14 5 32 8 40 20 4 6 4 14 0 18H16c-4 0-6-4-6-8z" fill="${p.body}" stroke="${p.edge}" stroke-width="1.5"/>
+    <path d="M10 72h134c2 6 2 12-2 14H16c-4 0-6-6-6-14z" fill="${p.sole}" stroke="${p.edge}" stroke-width="1.5"/>
+    <path d="M14 82h128" stroke="#E2E2E2" stroke-width="2"/>
+    <path d="M70 48c14 6 32 10 50 20-20 0-40-4-56-12z" fill="${p.accent}"/>
+    <path d="M60 40l10 6M67 35l10 7M74 31l9 6" stroke="${p.lace}" stroke-width="2" stroke-linecap="round"/></svg>`;
+}
+const boxArt = () => `<svg viewBox="0 0 120 120" class="art"><path d="M14 40 60 18l46 22-46 22z" fill="#E9A25C"/><path d="M14 40v46l46 22V62z" fill="#C97E3B"/><path d="M106 40v46L60 108V62z" fill="#D98F49"/></svg>`;
+
+function artFor(p, colorKey){
+  if(p.art==='sneaker') return sneakerArt(colorKey || (p.colors&&p.colors[0].key) || 'white');
+  if(ART[p.art]) return ART[p.art];
+  return boxArt();
+}
+
+/* ================= Data ================= */
+const CATS = [
+  {id:'electronics',short:'Electronics',name:'Electronics',icon:'📱'},
+  {id:'fashion',short:'Fashion',name:'Fashion',icon:'🧥'},
+  {id:'home',short:'Home & Kitchen',name:'Home & Kitchen',icon:'🪴'},
+  {id:'beauty',short:'Beauty',name:'Beauty & Personal Care',icon:'💄'},
+  {id:'sports',short:'Sports',name:'Sports & Outdoors',icon:'⚽'},
+  {id:'toys',short:'Toys & Kids',name:'Toys & Kids',icon:'🧸'},
+  {id:'tools',short:'Tools',name:'Tools & Hardware',icon:'🔧'},
+  {id:'groceries',short:'Groceries',name:'Groceries & Essentials',icon:'🧺'},
+];
+const SEED = [
+  {id:'headphones',source:'seed',name:'Wireless Headphones',category:'electronics',price:299,old:399,rating:4.7,reviews:842,art:'headphones',seller:'Kendoa Store',stock:24},
+  {id:'sneakers',source:'seed',name:"Men's Casual Sneakers",category:'fashion',price:250,old:359,rating:4.8,reviews:1258,art:'sneaker',seller:'Kendoa Store',stock:40,
+    colors:[{name:'Black',key:'black'},{name:'White',key:'white'},{name:'Navy',key:'navy'}], sizes:[39,40,41,42,43,44]},
+  {id:'watch',source:'seed',name:'Smart Watch',category:'electronics',price:480,old:600,rating:4.6,reviews:530,art:'watch',seller:'Kendoa Store',stock:15},
+];
+
+/* ================= Storage ================= */
+const DB_KEY = 'kendoa_v1';
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(DB_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {products:SEED, cart:[], orders:[], favs:{}};
+}
+function saveDB(){ try{ localStorage.setItem(DB_KEY, JSON.stringify(DB)); }catch(e){ toast("Couldn't save — your device storage may be full"); } }
+const DB = loadDB();
+if(!DB.products) DB.products = SEED;
+if(!DB.cart) DB.cart = [];
+if(!DB.orders) DB.orders = [];
+if(!DB.favs) DB.favs = {};
+
+const money = (n) => 'GH₵ ' + Number(n).toLocaleString('en-US');
+const pct = (p) => (p.old && p.old > p.price) ? Math.round((1 - p.price/p.old) * 100) : 0;
+const byId = (id) => DB.products.find(p => p.id === id);
+const cartCount = () => DB.cart.reduce((a,i)=>a+i.qty,0);
+const cartTotal = () => DB.cart.reduce((a,i)=>{ const p=byId(i.id); return a + (p?p.price*i.qty:0); },0);
+
+/* ================= State / router ================= */
+const S = { tab:'home', stack:[], query:'', pImages:[], addForm:{} };
+const $ = (id) => document.getElementById(id);
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._h); toast._h=setTimeout(()=>t.classList.remove('show'),1800); }
+
+function go(tab){ S.tab=tab; S.stack=[]; S.query=''; render(); window.scrollTo(0,0); }
+function push(name, params={}){ S.stack.push({name, params}); render(); }
+function back(){ S.stack.pop(); render(); }
+function current(){ return S.stack.length ? S.stack[S.stack.length-1] : {name:S.tab, params:{}}; }
+
+/* ================= Confirm dialog ================= */
+function confirmDialog(title, msg, okLabel, onOk){
+  const d = $('dialog');
+  $('dialogBody').innerHTML = `
+    <h3>${esc(title)}</h3><p>${esc(msg)}</p>
+    <div class="row2">
+      <button class="btn out full" id="dlgCancel">Cancel</button>
+      <button class="btn fill full" id="dlgOk">${esc(okLabel)}</button>
+    </div>`;
+  d.showModal();
+  $('dlgCancel').onclick = () => d.close();
+  $('dlgOk').onclick = () => { d.close(); onOk(); };
+}
+function alertDialog(title, msg, okLabel='OK', onOk){
+  const d = $('dialog');
+  $('dialogBody').innerHTML = `<h3>${esc(title)}</h3><p>${esc(msg)}</p><button class="btn fill full" id="dlgOk">${esc(okLabel)}</button>`;
+  d.showModal();
+  $('dlgOk').onclick = () => { d.close(); if(onOk) onOk(); };
+}
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ================= Screens ================= */
+function statusBarHTML(dark){
+  return `<div class="status ${dark?'dark':'lightbg'}" id="statusbar"></div>`;
+}
+
+function homeScreen(){
+  const q = S.query.trim().toLowerCase();
+  const results = q ? DB.products.filter(p => p.name.toLowerCase().includes(q) || (CATS.find(c=>c.id===p.category)?.name||'').toLowerCase().includes(q)) : [];
+  const deals = DB.products.filter(p => p.source==='seed').slice(0,3);
+  const fresh = DB.products.filter(p => p.source==='seller');
+
+  return `
+  <div class="home-top">
+    <div class="hdr">
+      <div class="brand"><img src="images/logo.png" alt=""><span>KENDOA</span></div>
+      <button class="bell" aria-label="Notifications">${I.bell}<i></i></button>
+    </div>
+    <label class="search">
+      ${svg('<circle cx="11" cy="11" r="7" fill="none" stroke="#9A9A9A" stroke-width="2.2"/><path d="m20 20-3.5-3.5" stroke="#9A9A9A" stroke-width="2.2" stroke-linecap="round"/>', 'width="17" height="17"')}
+      <input id="q" placeholder="Search for anything..." value="${esc(S.query)}" autocomplete="off">
+      ${svg('<circle cx="11" cy="11" r="7" fill="none" stroke="#FF6A00" stroke-width="2.2"/><path d="m20 20-3.5-3.5" stroke="#FF6A00" stroke-width="2.2" stroke-linecap="round"/>', 'width="18" height="18"')}
+    </label>
+    <div class="banner">
+      <h2>Big Deals<br>Bigger Smiles</h2>
+      <p>Top products. Best prices.</p>
+      <button class="shop" onclick="push('product',{id:'headphones'})">Shop Now ${I.arrow}</button>
+      <svg class="art" viewBox="0 0 200 150" aria-hidden="true" style="position:absolute;right:-8px;bottom:14px;width:56%;height:100%">
+        <g transform="translate(4,6)">${ART.headphones.replace('<svg viewBox="0 0 120 120" class="art">','').replace('</svg>','')}</g>
+      </svg>
+    </div>
+  </div>
+  <div class="sheet">
+    ${q ? `
+      <div class="sec"><h3>Results</h3></div>
+      ${results.length ? `<div class="grid3">${results.map(dealCard).join('')}</div>` : emptyBlock('🔎','Nothing found','Try a different word.')}
+    ` : `
+      <div class="cats">
+        ${CATS.slice(0,7).map(c=>`<button class="cat" onclick="push('category',{id:'${c.id}'})"><div class="ic">${c.icon}</div>${esc(c.short)}</button>`).join('')}
+        <button class="cat" onclick="go('categories')"><div class="ic">${svg('<circle cx="5" cy="12" r="1.6" fill="#333"/><circle cx="12" cy="12" r="1.6" fill="#333"/><circle cx="19" cy="12" r="1.6" fill="#333"/>','width="22" height="22"')}</div>More</button>
+      </div>
+      <div class="sec"><h3>Best Deals 🔥</h3><button onclick="go('categories')">See All ›</button></div>
+      <div class="grid3">${deals.map(dealCard).join('')}</div>
+      ${fresh.length ? `<div class="sec"><h3>Fresh from sellers</h3></div><div class="grid3">${fresh.map(dealCard).join('')}</div>` : ''}
+    `}
+  </div>`;
+}
+
+function dealCard(p){
+  const off = pct(p);
+  const img = p.images && p.images[0]
+    ? `<img src="${p.images[0]}" alt="">`
+    : artFor(p, p.colors&&p.colors[0].key);
+  const badge = off>0 ? `<span class="badge">-${off}%</span>` : (p.source==='seller' ? `<span class="newbadge">New</span>` : '');
+  return `
+  <button class="deal" onclick="push('product',{id:'${p.id}'})">
+    <div class="img">${badge}${img}</div>
+    <div class="p">${money(p.price)}${p.old>p.price?`<s>${money(p.old)}</s>`:''}</div>
+    <div class="n">${esc(p.name)}</div>
+  </button>`;
+}
+
+function emptyBlock(emoji,title,text,btnHTML=''){
+  return `<div class="empty"><div class="big">${emoji}</div><b style="font-size:15px;display:block;margin-bottom:6px">${esc(title)}</b>${esc(text)}${btnHTML}</div>`;
+}
+
+function categoriesScreen(){
+  return `
+  <div class="page-title"><span class="side"></span><span>Categories</span><span class="side r"><button class="iconbtn" aria-label="Search">${I.search}</button></span></div>
+  ${CATS.map(c=>{
+    const n = DB.products.filter(p=>p.category===c.id).length;
+    return `<button class="row" onclick="push('category',{id:'${c.id}'})">
+      <div class="thumb">${c.icon}</div>
+      <div class="t"><b>${esc(c.name)}</b><small>(${n})</small></div>${I.chev}
+    </button>`;
+  }).join('')}`;
+}
+
+function categoryScreen(id){
+  const cat = CATS.find(c=>c.id===id);
+  const items = DB.products.filter(p=>p.category===id);
+  return `
+  <div class="page-title"><span class="side"><button class="iconbtn" onclick="back()" aria-label="Back">${I.back}</button></span><span>${esc(cat?.name||'Category')}</span><span class="side r"></span></div>
+  <div style="padding:14px">
+    ${items.length ? `<div class="grid3">${items.map(dealCard).join('')}</div>` :
+      emptyBlock('🛍️','Nothing here yet','Be the first to sell in this category.',
+        `<button class="btn fill" onclick="push('addproduct',{category:'${id}'})">Sell on Kendoa</button>`)}
+  </div>`;
+}
+
+function productScreen(id){
+  const p = byId(id);
+  if(!p) return emptyBlock('❓','Product not found','It may have been removed.');
+  S.pImages = p.images && p.images.length ? p.images : null;
+  const off = pct(p);
+  const colorIdx = S.colorIdx ?? 0;
+  const color = p.colors ? p.colors[colorIdx] : null;
+  const size = p.sizes ? (S.size ?? p.sizes[0]) : null;
+  const imgs = S.pImages || [null];
+
+  return `
+  <div class="pimg">
+    <div class="scroller" id="pScroller">
+      ${imgs.map(u => `<div class="slide">${u ? `<img src="${u}" alt="">` : artFor(p, color?.key)}</div>`).join('')}
+    </div>
+    <div class="top">
+      <button class="round" onclick="back()" aria-label="Back">${I.back}</button>
+      <div class="r">
+        <button class="round" onclick="toggleFav('${p.id}')" aria-label="Save">${DB.favs[p.id]?I.heartF:I.heart}</button>
+        <button class="round" onclick="shareProduct('${p.id}')" aria-label="Share">${I.share}</button>
+      </div>
+    </div>
+    ${imgs.length>1 ? `<div class="count" id="pCount">1/${imgs.length}</div>` : ''}
+  </div>
+  <div class="pinfo">
+    <h1>${esc(p.name)}</h1>
+    ${p.rating ? `
+      <div class="stars"><span class="s">★★★★★</span><b>${p.rating}</b><span>(${p.reviews.toLocaleString('en-US')} reviews)</span></div>
+    ` : `<div class="newpill">New listing</div>`}
+    <div class="price">
+      <b>${money(p.price)}</b>
+      ${off>0?`<s>${money(p.old)}</s><span class="off">-${off}%</span>`:''}
+    </div>
+    ${p.colors ? `
+      <div class="lbl">Color: <span>${esc(color.name)}</span></div>
+      <div class="swatches">${p.colors.map((c,i)=>`<button class="sw ${i===colorIdx?'on':''}" onclick="S.colorIdx=${i};render()" aria-label="${esc(c.name)}">${sneakerArt(c.key).replace('viewBox="0 0 160 100" class="art"','viewBox="0 0 160 100" width="34" height="22"')}</button>`).join('')}</div>
+    ` : ''}
+    ${p.sizes ? `
+      <div class="lbl">Size</div>
+      <div class="sizes">${p.sizes.map(z=>`<button class="sz ${z===size?'on':''}" onclick="S.size=${z};render()">${z}</button>`).join('')}</div>
+    ` : ''}
+    ${p.description ? `<div class="lbl">About this item</div><div class="desc">${esc(p.description)}</div>` : ''}
+    <div class="meta">Sold by ${esc(p.seller)}${p.stock!=null?`  ·  ${p.stock} in stock`:''}</div>
+  </div>`;
+}
+
+function cartScreen(){
+  if(!DB.cart.length){
+    return `<div class="page-title"><span class="side"></span><span>Cart</span><span class="side r"></span></div>
+      ${emptyBlock('🛒','Your cart is empty','Add something you love.','<div style="height:2px"></div>')}
+      <div style="text-align:center"><button class="btn fill" style="width:200px;margin:0 auto" onclick="go('home')">Start shopping</button></div>`;
+  }
+  return `
+  <div class="page-title"><span class="side"></span><span>Cart</span><span class="side r"></span></div>
+  ${DB.cart.map((i,idx)=>{
+    const p = byId(i.id); if(!p) return '';
+    const img = p.images && p.images[0] ? `<img src="${p.images[0]}" alt="">` : artFor(p, i.colorKey);
+    const opts = [i.color, i.size?`Size ${i.size}`:null].filter(Boolean).join(' · ');
+    return `<div class="cartrow">
+      <div class="thumb">${img}</div>
+      <div class="t"><b>${esc(p.name)}</b>${opts?`<small>${esc(opts)}</small>`:''}<span class="pr">${money(p.price)}</span></div>
+      <div class="qty"><button onclick="changeQty(${idx},-1)" aria-label="Less">−</button>${i.qty}<button onclick="changeQty(${idx},1)" aria-label="More">+</button></div>
+    </div>`;
+  }).join('')}
+  <div class="total"><span>Total</span><span>${money(cartTotal())}</span></div>
+  <div class="foot"><button class="btn fill full" onclick="checkout()">Checkout</button></div>`;
+}
+
+function ordersScreen(){
+  if(!DB.orders.length){
+    return `<div class="page-title"><span class="side"></span><span>Orders</span><span class="side r"></span></div>
+      ${emptyBlock('📦','No orders yet','Your orders will show up here.')}`;
+  }
+  return `<div class="page-title"><span class="side"></span><span>Orders</span><span class="side r"></span></div>
+  ${DB.orders.map(o=>`<div class="cartrow">
+    <div class="thumb" style="font-size:22px">📦</div>
+    <div class="t"><b>Order #${o.no}</b><small>${esc(o.lines.map(l=>`${l.qty} × ${l.name}`).join(', '))}</small><span class="pr" style="color:var(--o1)">Processing</span></div>
+    <div style="font-weight:800;font-size:12.5px">${money(o.total)}</div>
+  </div>`).join('')}`;
+}
+
+function profileScreen(){
+  const mine = DB.products.filter(p=>p.source==='seller').length;
+  return `
+  <div class="page-title"><span class="side"></span><span>Profile</span><span class="side r"></span></div>
+  <div class="profile-head">
+    <div class="avatar">K</div>
+    <div><b style="font-size:14.5px;display:block">Welcome to Kendoa</b><small style="font-size:10.5px;color:var(--grey);font-weight:500">Sign in to shop and sell</small></div>
+  </div>
+  <button class="sellcard" onclick="push('myshop')" style="width:calc(100% - 32px)">
+    <div class="ic">${I.store}</div>
+    <div class="t"><b>Sell on Kendoa</b><small>${mine ? `${mine} product${mine>1?'s':''} listed` : 'List your products and reach buyers'}</small></div>
+    ${svg('<path d="m9 6 6 6-6 6" fill="none" stroke="#FF6A00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>','width="17" height="17"')}
+  </button>
+  <button class="row" onclick="toast('Accounts come in the next step, when we connect a database.')">
+    <div class="t"><b>Sign in / Create account</b></div>${I.chev}
+  </button>
+  <button class="row" onclick="toast('Coming soon')"><div class="t"><b>Saved items</b></div>${I.chev}</button>
+  <button class="row" onclick="toast('Coming soon')"><div class="t"><b>Help & support</b></div>${I.chev}</button>`;
+}
+
+function myShopScreen(){
+  const mine = DB.products.filter(p=>p.source==='seller');
+  return `
+  <div class="page-title"><span class="side"><button class="iconbtn" onclick="back()" aria-label="Back">${I.back}</button></span><span>My Shop</span><span class="side r"></span></div>
+  ${mine.length ? `
+    <div style="padding:10px 18px;font-size:11px;color:var(--grey);font-weight:500">${mine.length} product${mine.length>1?'s':''} for sale</div>
+    ${mine.map(p=>`
+    <div class="row" style="cursor:pointer" onclick="push('product',{id:'${p.id}'})">
+      <div class="thumb">${p.images&&p.images[0]?`<img src="${p.images[0]}" alt="">`:artFor(p)}</div>
+      <div class="t"><b>${esc(p.name)}</b><small>${esc(CATS.find(c=>c.id===p.category)?.name||'')} · ${p.stock} in stock</small><div style="font-weight:800;font-size:12.5px;margin-top:4px">${money(p.price)}</div></div>
+      <button class="iconbtn" onclick="event.stopPropagation();deleteProduct('${p.id}')" aria-label="Remove">${I.trash}</button>
+    </div>`).join('')}
+  ` : emptyBlock('🏪','Your shop is empty','Add your first product with photos and a price. Buyers can see it right away.')}
+  <div class="foot"><button class="btn fill full" onclick="push('addproduct')">Add product</button></div>`;
+}
+
+function addProductScreen(params){
+  const f = S.addForm;
+  if(f.category===undefined) f.category = params.category || null;
+  if(!f.images) f.images = [];
+  const err = S.addErrors || {};
+  const e = (k) => err[k] ? `<div class="ferr">${esc(err[k])}</div>` : '';
+
+  return `
+  <div class="page-title"><span class="side"><button class="iconbtn" onclick="cancelAddProduct()" aria-label="Back">${I.back}</button></span><span>Add product</span><span class="side r"></span></div>
+  <div class="form">
+    <label class="flabel">Photos <span class="fhint">(${f.images.length}/5 · first is cover)</span></label>
+    <div class="photos">
+      ${f.images.length<5 ? `<button type="button" class="addphoto" onclick="document.getElementById('fileInput').click()">${I.camera}<span>Add photo</span></button>` : ''}
+      ${f.images.map((uri,i)=>`
+        <div class="photo"><img src="${uri}" alt="">
+          ${i===0?'<div class="cover">Cover</div>':''}
+          <button type="button" class="x" onclick="removePhoto(${i})" aria-label="Remove">${I.close}</button>
+        </div>`).join('')}
+    </div>
+    ${e('images')}
+
+    <label class="flabel">Product name</label>
+    <input class="finput ${err.name?'err':''}" id="fName" maxlength="60" placeholder="e.g. Men's Casual Sneakers" value="${esc(f.name||'')}">
+    ${e('name')}
+
+    <label class="flabel">Category</label>
+    <div class="chips">${CATS.map(c=>`<button type="button" class="chip ${f.category===c.id?'on':''}" onclick="setAddCategory('${c.id}')">${c.icon} ${esc(c.name)}</button>`).join('')}</div>
+    ${e('category')}
+
+    <div class="row2">
+      <div>
+        <label class="flabel">Price (GH₵)</label>
+        <input class="finput ${err.price?'err':''}" id="fPrice" inputmode="decimal" placeholder="250" value="${esc(f.price||'')}">
+        ${e('price')}
+      </div>
+      <div>
+        <label class="flabel">Old price <span class="fhint">(optional)</span></label>
+        <input class="finput ${err.oldPrice?'err':''}" id="fOld" inputmode="decimal" placeholder="359" value="${esc(f.oldPrice||'')}">
+        ${e('oldPrice')}
+      </div>
+    </div>
+    <div class="fhint" style="margin-top:8px">Add an old price to show a discount badge on your product.</div>
+
+    <label class="flabel">How many do you have?</label>
+    <input class="finput ${err.stock?'err':''}" id="fStock" style="width:130px" inputmode="numeric" placeholder="1" value="${esc(f.stock??'1')}">
+    ${e('stock')}
+
+    <label class="flabel">Description <span class="fhint">(optional)</span></label>
+    <textarea class="ftextarea" id="fDesc" maxlength="500" placeholder="Size, condition, colour, what's in the box...">${esc(f.desc||'')}</textarea>
+  </div>
+  <div class="foot"><button class="btn fill full" onclick="publishProduct()">Publish product</button></div>`;
+}
+
+/* ================= Actions ================= */
+function toggleFav(id){ DB.favs[id] = !DB.favs[id]; saveDB(); render(); }
+async function shareProduct(id){
+  const p = byId(id);
+  const text = `${p.name} for ${money(p.price)} on Kendoa`;
+  if(navigator.share){ try{ await navigator.share({title:'Kendoa', text}); }catch(e){} }
+  else if(navigator.clipboard){ await navigator.clipboard.writeText(text); toast('Copied to clipboard'); }
+  else toast(text);
+}
+function changeQty(idx,d){
+  DB.cart[idx].qty += d;
+  if(DB.cart[idx].qty<=0) DB.cart.splice(idx,1);
+  saveDB(); render();
+}
+function addToCart(p, opt, silent){
+  const key = [p.id, opt.size||'', opt.color||''].join('|');
+  const ex = DB.cart.find(i=>i.key===key);
+  if(ex) ex.qty++;
+  else DB.cart.push({key, id:p.id, qty:1, size:opt.size||null, color:opt.color||null, colorKey:opt.colorKey||null});
+  saveDB();
+  if(!silent) toast('Added to cart');
+}
+function checkout(){
+  if(!DB.cart.length) return;
+  DB.orders.unshift({
+    no: Math.floor(1000+Math.random()*9000),
+    total: cartTotal(),
+    lines: DB.cart.map(i=>({name:byId(i.id)?.name||'Item', qty:i.qty})),
+  });
+  DB.cart = [];
+  saveDB();
+  go('orders');
+  toast('Order placed');
+}
+function deleteProduct(id){
+  const p = byId(id);
+  confirmDialog('Remove this product?', `"${p.name}" will no longer show on Kendoa.`, 'Remove', () => {
+    DB.products = DB.products.filter(x=>x.id!==id);
+    DB.cart = DB.cart.filter(i=>i.id!==id);
+    saveDB(); render();
+    toast('Product removed');
+  });
+}
+
+/* ---- Add product form logic ---- */
+function setAddCategory(id){ S.addForm.category = id; render(); }
+function removePhoto(i){ S.addForm.images.splice(i,1); render(); }
+function cancelAddProduct(){ S.addForm = {}; S.addErrors = null; back(); }
+
+function shrinkImage(dataUrl, maxSide=900, quality=0.72){
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let {width:w, height:h} = img;
+      if(w>maxSide || h>maxSide){
+        if(w>h){ h = Math.round(h*maxSide/w); w = maxSide; }
+        else { w = Math.round(w*maxSide/h); h = maxSide; }
+      }
+      const c = document.createElement('canvas');
+      c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+$('fileInput').addEventListener('change', (e) => {
+  const files = Array.from(e.target.files || []).slice(0, 5 - (S.addForm.images?.length||0));
+  if(!files.length) return;
+  let remaining = files.length;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const small = await shrinkImage(reader.result);
+      S.addForm.images = S.addForm.images || [];
+      if(S.addForm.images.length < 5) S.addForm.images.push(small);
+      remaining--;
+      if(remaining===0){ render(); }
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+});
+
+function readAddForm(){
+  const f = S.addForm;
+  f.name = $('fName') ? $('fName').value : f.name;
+  f.price = $('fPrice') ? $('fPrice').value : f.price;
+  f.oldPrice = $('fOld') ? $('fOld').value : f.oldPrice;
+  f.stock = $('fStock') ? $('fStock').value : f.stock;
+  f.desc = $('fDesc') ? $('fDesc').value : f.desc;
+}
+const num = (t) => Number(String(t||'').replace(/,/g,'.').replace(/[^0-9.]/g,''));
+
+function validateAddForm(){
+  const f = S.addForm; const e = {};
+  const p = num(f.price), o = num(f.oldPrice), st = Math.floor(num(f.stock));
+  if(!f.images || !f.images.length) e.images = 'Add at least one photo.';
+  if(!f.name || f.name.trim().length<3) e.name = 'Enter a product name (at least 3 letters).';
+  if(!f.category) e.category = 'Choose a category.';
+  if(!p || p<=0) e.price = 'Enter a price above 0.';
+  if(f.oldPrice && String(f.oldPrice).trim() && !(o>p)) e.oldPrice = 'The old price must be higher than your price.';
+  if(!st || st<1) e.stock = 'Enter how many you have (at least 1).';
+  return e;
+}
+
+function publishProduct(){
+  readAddForm();
+  const errs = validateAddForm();
+  S.addErrors = errs;
+  if(Object.keys(errs).length){ render(); return; }
+  const f = S.addForm;
+  const id = 'p' + Date.now();
+  DB.products.unshift({
+    id, source:'seller', name:f.name.trim(), category:f.category,
+    price:num(f.price), old: f.oldPrice && String(f.oldPrice).trim() ? num(f.oldPrice) : null,
+    stock: Math.floor(num(f.stock)), description:(f.desc||'').trim(),
+    images: f.images, seller:'You', rating:null, reviews:0,
+  });
+  saveDB();
+  S.addForm = {}; S.addErrors = null;
+  S.stack = S.stack.slice(0,-1); // drop add-product
+  render();
+  alertDialog('Product published', 'Buyers can now see it on Kendoa.');
+}
+
+/* ================= Render ================= */
+function bottomNavHTML(){
+  const t = S.tab, n = cartCount();
+  const tabs = [
+    ['home','Home',I.home],['categories','Categories',I.grid],
+    ['cart','Cart',null],['orders','Orders',I.orders],['profile','Profile',I.user],
+  ];
+  return `<div class="nav">
+    ${tabs.map(([id,label,ic])=>{
+      const on = t===id && !S.stack.length;
+      let icon;
+      if(id==='home') icon = I.home(on);
+      else if(id==='categories') icon = I.grid(on);
+      else if(id==='cart') icon = I.cart;
+      else if(id==='orders') icon = I.orders;
+      else icon = I.user;
+      return `<button class="${on?'on':''}" onclick="go('${id}')">${icon}${id==='cart'&&n?`<span class="cnt">${n}</span>`:''}<span>${label}</span></button>`;
+    }).join('')}
+  </div>`;
+}
+
+function actionsBarHTML(id){
+  const p = byId(id);
+  if(!p) return '';
+  return `<div class="actions">
+    <button class="btn out" onclick="onAddToCart('${id}')">Add to Cart</button>
+    <button class="btn fill" onclick="onBuyNow('${id}')">Buy Now</button>
+  </div>`;
+}
+function currentOpt(p){
+  const color = p.colors ? p.colors[S.colorIdx ?? 0] : null;
+  const size = p.sizes ? (S.size ?? p.sizes[0]) : null;
+  return {size, color: color?.name, colorKey: color?.key};
+}
+function onAddToCart(id){ const p=byId(id); addToCart(p, currentOpt(p)); }
+function onBuyNow(id){ const p=byId(id); addToCart(p, currentOpt(p), true); go('cart'); }
+
+function render(){
+  const top = current();
+  const showTabs = !S.stack.length;
+  let html, dark=false;
+
+  if(!showTabs){
+    if(top.name==='product') html = productScreen(top.params.id);
+    else if(top.name==='category') html = categoryScreen(top.params.id);
+    else if(top.name==='addproduct') html = addProductScreen(top.params);
+    else if(top.name==='myshop') html = myShopScreen();
+  } else {
+    if(S.tab==='home'){ html = homeScreen(); dark = true; }
+    else if(S.tab==='categories') html = categoriesScreen();
+    else if(S.tab==='cart') html = cartScreen();
+    else if(S.tab==='orders') html = ordersScreen();
+    else if(S.tab==='profile') html = profileScreen();
+    else if(S.tab==='myshop') html = myShopScreen();
+  }
+  $('statusbar').outerHTML = statusBarHTML(dark);
+  $('content').innerHTML = html;
+  $('content').id = 'content';
+
+  // bottom bar: hide on stacked screens with their own action bar, and on myshop
+  if(!showTabs && top.name==='product'){
+    $('bottom').innerHTML = actionsBarHTML(top.params.id);
+  } else if(!showTabs){
+    $('bottom').innerHTML = '';
+  } else {
+    $('bottom').innerHTML = bottomNavHTML();
+  }
+
+  const q = $('q');
+  if(q){
+    q.oninput = (e) => { S.query = e.target.value; const pos = e.target.selectionStart; render(); const n=$('q'); if(n){ n.focus(); n.setSelectionRange(pos,pos);} };
+  }
+  const scroller = $('pScroller');
+  if(scroller){
+    scroller.onscroll = () => {
+      const i = Math.round(scroller.scrollLeft / scroller.clientWidth);
+      const c = $('pCount'); if(c) c.textContent = (i+1) + '/' + scroller.children.length;
+    };
+  }
+
+  // Keep the Add-product form's typed text in state as the person types,
+  // so tapping a category chip or a photo never wipes what they already wrote.
+  ['fName','fPrice','fOld','fStock','fDesc'].forEach(id => {
+    const el = $(id);
+    if(el) el.oninput = () => readAddForm();
+  });
+
+  document.getElementById('screen').scrollTop = 0;
+}
+
+render();
+
+/* ================= Install prompt ================= */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBar();
+});
+function showInstallBar(){
+  if(localStorage.getItem('kendoa_install_dismissed')) return;
+  $('installbar').innerHTML = `
+    <img src="icons/icon-192.png" alt="">
+    <div class="t"><b>Install Kendoa</b><small>Add it to your home screen</small></div>
+    <button class="go" id="installGo">Install</button>
+    <button class="x" id="installX" aria-label="Close">${I.close.replace('#fff','#aaa')}</button>`;
+  $('installX').onclick = () => { $('installbar').innerHTML=''; localStorage.setItem('kendoa_install_dismissed','1'); };
+  $('installGo').onclick = async () => {
+    $('installbar').innerHTML='';
+    if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; }
+  };
+}
+window.addEventListener('appinstalled', () => { $('installbar').innerHTML=''; toast('Kendoa installed 🎉'); });
+
+/* ================= Service worker ================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
